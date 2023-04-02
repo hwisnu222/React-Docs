@@ -1,35 +1,62 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useReducer } from "react";
+import "./App.css";
+
+const constant = {
+  INCREASE_COUNT: "INCREASE_COUNT",
+  DECREASE_COUNT: "DECREASE_COUNT",
+  SET_NAME: "SET_NAME",
+};
+
+const initialState = {
+  count: 0,
+  name: "Initial name",
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case constant.INCREASE_COUNT:
+      return {
+        ...state,
+        count: state.count + 1,
+      };
+    case constant.DECREASE_COUNT:
+      return {
+        ...state,
+        count: state.count - 1,
+      };
+    case constant.SET_NAME:
+      return {
+        ...state,
+        name: action.payload,
+      };
+  }
+};
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const increase = () => {
+    dispatch({ type: constant.INCREASE_COUNT });
+  };
+
+  const decrease = () => {
+    dispatch({ type: constant.DECREASE_COUNT });
+  };
+
+  const changeName = () => {
+    dispatch({ type: constant.SET_NAME, payload: "hello" });
+  };
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <p>{state.name}</p>
+      <p>{state.count}</p>
+      <button onClick={increase}>Increase</button>
+      <button onClick={decrease}>Decrease</button>
+
+      <button onClick={changeName}>Change name</button>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
